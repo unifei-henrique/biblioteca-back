@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model ASSOCIADO {
+  Codigo     Int              @id @default(autoincrement())
+  Nome       String           @db.VarChar(35)
+  Endereco   String           @db.VarChar(45)
+  Email      String           @db.VarChar(20)
+  Status     ASSOCIADO_Status
+  EMPRESTIMO EMPRESTIMO[]
+  RESERVA    RESERVA[]
+}
+
+model EMPRESTIMO {
+  Codigo       Int       @id @default(autoincrement())
+  Nro_Exemplar Int
+  ISBN         String    @db.VarChar(12)
+  Codigo_Assoc Int
+  Data_Emp     DateTime  @db.Date
+  Data_Devol   DateTime? @db.Date
+  ASSOCIADO    ASSOCIADO @relation(fields: [Codigo_Assoc], references: [Codigo], onDelete: NoAction, onUpdate: NoAction, map: "EMPRESTIMO_ibfk_1")
+
+  @@index([Codigo_Assoc], map: "Codigo_Assoc")
+  @@index([Nro_Exemplar, ISBN], map: "Nro_Exemplar")
+}
+
+model EXEMPLAR {
+  Numero     Int
+  ISBN       String     @db.VarChar(12)
+  Preco      Float?     @db.Float
+  PUBLICACAO PUBLICACAO @relation(fields: [ISBN], references: [ISBN], onDelete: NoAction, onUpdate: NoAction, map: "EXEMPLAR_ibfk_1")
+
+  @@id([Numero, ISBN])
+  @@index([ISBN], map: "ISBN")
+}
+
+model FUNCIONARIO {
+  Codigo Int                @id @default(autoincrement())
+  Nome   String             @db.VarChar(35)
+  Funcao FUNCIONARIO_Funcao
+  Email  String             @db.VarChar(20)
+}
+
+model PUBLICACAO {
+  ISBN     String     @id @db.VarChar(12)
+  Titulo   String     @db.VarChar(40)
+  Autor    String     @db.VarChar(35)
+  Editora  String     @db.VarChar(30)
+  EXEMPLAR EXEMPLAR[]
+  RESERVA  RESERVA[]
+}
+
+model RESERVA {
+  Codigo       Int            @id @default(autoincrement())
+  ISBN         String         @db.VarChar(12)
+  Codigo_Assoc Int
+  Data         DateTime       @db.Date
+  Status       RESERVA_Status
+  PUBLICACAO   PUBLICACAO     @relation(fields: [ISBN], references: [ISBN], onDelete: NoAction, onUpdate: NoAction, map: "RESERVA_ibfk_1")
+  ASSOCIADO    ASSOCIADO      @relation(fields: [Codigo_Assoc], references: [Codigo], onDelete: NoAction, onUpdate: NoAction, map: "RESERVA_ibfk_2")
+
+  @@index([Codigo_Assoc], map: "Codigo_Assoc")
+  @@index([ISBN], map: "ISBN")
+}
+
+enum FUNCIONARIO_Funcao {
+  gerente
+  funcionario
+}
+
+enum ASSOCIADO_Status {
+  Grad
+  Posgrad
+  Prof
+}
+
+enum RESERVA_Status {
+  Iniciado
+  Avisado
+  Anulado
+}
