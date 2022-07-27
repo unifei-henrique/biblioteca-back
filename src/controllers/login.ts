@@ -4,19 +4,19 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export interface IloginFuncionario {
-  codigo: number;
+  nome: string;
   senha: string;
 }
 
 export interface IloginAssociado {
-  codigo: number;
+  nome: string;
   senha: string;
 }
 
-const loginFuncionario = async ({ codigo }: IloginFuncionario) => {
+const loginFuncionario = async ({ nome }: IloginFuncionario) => {
   const exists = await prisma.fUNCIONARIO.findFirst({
     where: {
-      Codigo: codigo,
+      Nome: nome,
     },
   });
   if (!exists) {
@@ -26,7 +26,7 @@ const loginFuncionario = async ({ codigo }: IloginFuncionario) => {
     };
   }
 
-  const loginToken = jwt.generate({ codigo });
+  const loginToken = jwt.generate({ nome });
 
   return {
     status: 200,
@@ -34,10 +34,10 @@ const loginFuncionario = async ({ codigo }: IloginFuncionario) => {
   };
 };
 
-const loginAssociado = async ({ codigo }: IloginAssociado) => {
+const loginAssociado = async ({ nome }: IloginAssociado) => {
   const exists = await prisma.aSSOCIADO.findFirst({
     where: {
-      Codigo: codigo,
+      Nome: nome,
     },
   });
 
@@ -48,7 +48,7 @@ const loginAssociado = async ({ codigo }: IloginAssociado) => {
     };
   }
 
-  const loginToken = jwt.generate({ codigo });
+  const loginToken = jwt.generate({ nome });
 
   return {
     status: 200,
