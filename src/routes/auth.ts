@@ -5,10 +5,10 @@ const router = express.Router();
 
 router.post("/funcionario", async (req: Request, res: Response) => {
   try {
-    const { codigo, senha } = req.body;
+    const { nome, senha } = req.body;
 
     const response = await controllers.login.loginFuncionario({
-      codigo: Number(codigo),
+      nome,
       senha,
     });
 
@@ -24,10 +24,10 @@ router.post("/funcionario", async (req: Request, res: Response) => {
 
 router.post("/associado", async (req: Request, res: Response) => {
   try {
-    const { codigo, senha } = req.body;
+    const { nome, senha } = req.body;
 
     const response = await controllers.login.loginAssociado({
-      codigo: Number(codigo),
+      nome,
       senha,
     });
 
