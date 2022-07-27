@@ -5,12 +5,12 @@ const router = express.Router();
 
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const { ISBN, numero, preco } = req.body;
+    const { ISBN, Numero, Preco } = req.body;
 
     const response = await controllers.exemplar.createExemplar({
       ISBN,
-      numero,
-      preco,
+      Numero,
+      Preco,
     });
 
     return res.status(response.status).send(response);

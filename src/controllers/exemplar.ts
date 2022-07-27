@@ -3,17 +3,17 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export interface ICreateExemplar {
-  preco: string;
+  Preco: string;
   ISBN: string;
-  numero: string;
+  Numero: string;
 }
 
 const createExemplar = async (params: ICreateExemplar) => {
-  const { preco, ISBN, numero } = params;
+  const { Preco, ISBN, Numero } = params;
   const created = await prisma.eXEMPLAR.create({
     data: {
-      Numero: Number(numero),
-      Preco: Number(preco),
+      Numero: Number(Numero),
+      Preco: Number(Preco),
       ISBN,
     },
   });
